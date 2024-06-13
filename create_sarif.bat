@@ -4,5 +4,14 @@ set language=%3
 
 git -C .\%repo%\ checkout %commit%
 
-codeql database create %repo%-db-%commit% --language=%language%
-codeql database analyze .\%repo%-db-%commit%\ --format=sarif-latest --output=%repo%-%commit%.sarif
+set name=%repo%-%commit%-%language%
+IF "%4"=="-b" (
+    set name=%repo%-baseline
+)
+
+IF NOT EXIST %name%-db\ (
+    codeql database create %name%-db --language=%language%
+)
+IF NOT EXIST %name%.sarif (
+    codeql database analyze .\%name%-db\ --format=sarif-latest --output=%name%.sarif
+)

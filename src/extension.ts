@@ -18,8 +18,12 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
+    const baselineFile = vscode.Uri.file(__dirname + '\\..\\tensorflow-baseline.sarif');
+    const baseline = await analyzeCodebase([baselineFile]);
+    console.log(baseline)
     const results = await analyzeCodebase(sarifFiles);
-    const newIssues = compareScans(results);
+    const newIssues = compareScans(results, baseline[0]);
+
     showResults(newIssues);
   });
 

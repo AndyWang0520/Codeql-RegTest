@@ -1,14 +1,19 @@
+import { doesNotMatch } from 'assert';
 import * as fs from 'fs/promises';
 import * as vscode from 'vscode';
 
+interface Run {
+  results: { message: { text: string; }; }[];
+  properties?: {
+    commitHash?: string;
+    author?: string;
+    date?: string;
+    summary?: string;
+  };
+}
+
 export interface SarifLog {
-  runs: Array<{
-    results: Array<{
-      message: {
-        text: string;
-      };
-    }>;
-  }>;
+  runs: Run[];
 }
 
 export async function analyzeCodebase(sarifFiles: vscode.Uri[]): Promise<SarifLog[]> {
